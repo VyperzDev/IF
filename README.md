@@ -1,6 +1,6 @@
 # IF <a href="https://discord.gg/RXmy4HdR4x"><img align="right" src="https://img.shields.io/discord/780514939293925407" alt="Discord guild"></a>
 
-*This framework works for Minecraft versions 1.14-1.20*
+*This framework works for Minecraft versions 1.14-1.21*
 
 An inventory framework for managing GUIs
 
@@ -14,7 +14,7 @@ To add this project as a dependency to your pom.xml, add the following to your p
 <dependency>
     <groupId>com.github.stefvanschie.inventoryframework</groupId>
     <artifactId>IF</artifactId>
-    <version>0.10.13</version>
+    <version>0.10.18</version>
 </dependency>
 ```
 The project is in the Central Repository, so specifying a repository is not needed.
@@ -24,7 +24,7 @@ Now in order to shade the project into your project, add the following to your p
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-shade-plugin</artifactId>
-    <version>3.2.4</version>
+    <version>3.5.2</version>
     <configuration>
         <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
         <relocations>
@@ -50,7 +50,7 @@ Replace [YOUR PACKAGE] with the top-level package of your project.
 To add this project as a dependency for your Gradle project, make sure your `dependencies` section of your build.gradle looks like the following:
 ```Groovy
 dependencies {
-    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.13'
+    implementation 'com.github.stefvanschie.inventoryframework:IF:0.10.18'
     // ...
 }
 ```
@@ -124,7 +124,7 @@ mvn install:install-file -Dfile=cache/patched_1.16.4.jar -DgroupId="io.papermc" 
 ```
 
 ### Installing Paper via the maven plugin
-For versions 1.17-1.18, we use Paper via the [paper-nms-maven-plugin](https://github.com/Alvinn8/paper-nms-maven-plugin). To install these versions locally, we must run a few maven commands. These commands should be ran in the root directory of the project.
+For versions 1.17-1.20.4, we use Paper via the [paper-nms-maven-plugin](https://github.com/Alvinn8/paper-nms-maven-plugin). To install these versions locally, we must run a few maven commands. These commands should be ran in the root directory of the project.
 ```
 mvn paper-nms:init -pl nms/1_17_0
 mvn paper-nms:init -pl nms/1_17_1
@@ -139,6 +139,55 @@ mvn paper-nms:init -pl nms/1_19_4
 mvn paper-nms:init -pl nms/1_20_0-1
 mvn paper-nms:init -pl nms/1_20_2
 mvn paper-nms:init -pl nms/1_20_3-4
+```
+
+### Installing Spigot via BuildTools
+For versions 1.20.5-1.21.3, we use BuildTools. To install these versions, we run the following commands.
+```
+wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar -O BuildTools.jar
+        
+git clone https://hub.spigotmc.org/stash/scm/spigot/bukkit.git Bukkit
+cd Bukkit
+git checkout 304e83eb384c338546aa96eea51388e0e8407e26
+cd ..
+
+git clone https://hub.spigotmc.org/stash/scm/spigot/craftbukkit.git CraftBukkit
+cd CraftBukkit
+git checkout 91b1fc3f1cf89e2591367dca1fa7362fe376f289
+cd ..
+
+git clone https://hub.spigotmc.org/stash/scm/spigot/spigot.git Spigot
+cd Spigot
+git checkout b698b49caf14f97a717afd67e13fd7ac59f51089
+cd ..
+
+git clone https://hub.spigotmc.org/stash/scm/spigot/builddata.git BuildData
+cd BuildData
+git checkout a7f7c2118b877fde4cf0f32f1f730ffcdee8e9ee
+cd ..
+
+java -jar BuildTools.jar --remapped --disable-java-check --dont-update
+java -jar BuildTools.jar --rev 1.20.6 --remapped --disable-java-check
+
+cd Bukkit
+git checkout 2ec53f498e32b3af989cb24672fc54dfab087154
+cd ..
+
+cd CraftBukkit
+git checkout 8ee6fd1b8db9896590aa321d0199453de1fc35db
+cd ..
+
+cd Spigot
+git checkout fb8fb722a327a2f9f097f2ded700ac5de8157408
+cd ..
+
+cd BuildData
+git checkout ae1e7b1e31cd3a3892bb05a6ccdcecc48c73c455
+cd ..
+
+java -jar BuildTools.jar --remapped --disable-java-check --dont-update
+java -jar BuildTools.jar --rev 1.21.1 --remapped --disable-java-check
+java -jar BuildTools.jar --rev 1.21.3 --remapped --disable-java-check
 ```
 
 Your environment is now set up correctly. To create a build, run the following inside the root folder of the project.
